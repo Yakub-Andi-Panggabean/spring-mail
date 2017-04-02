@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<comment>Mail transaction Queries</comment>
+	<entry key="insertEmailTransaction">
+	<![CDATA[
+		insert into
+		mail_transaction(id,user_id,action_id,status,transaction_datetime)
+		values(?,?,?,?,?)
+		]]>
+	</entry>
+
+	<entry key="insertEmailAction">
+	<![CDATA[
+		insert into
+		mail_action(id,action_name,template,created_date,created_by,updated_date,updated_by)
+		values(?,?,?,?,?,?,?)
+		]]>
+	</entry>
+
+	<entry key="findInactiveUser">
+	<![CDATA[
+		select user_email as email from user_web where user_status = ?
+		]]>
+	</entry>
+	
+	<entry key="findUnconfirmedTransaction">
+	<![CDATA[
+		select * from need_confirmation where group_transaction_id =? and transaction_id= ?
+		]]>
+	</entry>
+	
+	<entry key="findPasswordReminderRequest">
+	<![CDATA[
+		select * from password_reminder where reminder_status =? 
+		]]>
+	</entry>
+	
+	
+</properties>
