@@ -5,7 +5,7 @@ import java.util.Date;
 public class MailAction {
 
   private String id;
-  private String actionName;
+  private String actionCode;
   private String template;
   private Date createdDate;
   private String createdBy;
@@ -16,11 +16,11 @@ public class MailAction {
     super();
   }
 
-  public MailAction(String id, String actionName, String template, Date createdDate,
+  public MailAction(String id, String actionCode, String template, Date createdDate,
       String createdBy, Date updatedDate, String updatedBy) {
     super();
     this.id = id;
-    this.actionName = actionName;
+    this.actionCode = actionCode;
     this.template = template;
     this.createdDate = createdDate;
     this.createdBy = createdBy;
@@ -36,12 +36,12 @@ public class MailAction {
     this.id = id;
   }
 
-  public String getActionName() {
-    return actionName;
+  public String getActionCode() {
+    return actionCode;
   }
 
-  public void setActionName(String actionName) {
-    this.actionName = actionName;
+  public void setActionCode(String actionCode) {
+    this.actionCode = actionCode;
   }
 
   public String getTemplate() {
@@ -86,7 +86,7 @@ public class MailAction {
 
   @Override
   public String toString() {
-    return "MailAction [id=" + id + ", actionName=" + actionName + ", template=" + template
+    return "MailAction [id=" + id + ", actionName=" + actionCode + ", template=" + template
         + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDate="
         + updatedDate + ", updatedBy=" + updatedBy + "]";
   }

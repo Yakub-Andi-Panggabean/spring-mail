@@ -10,6 +10,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
+import com.special.gitf.mail.service.MailTransactionService;
+import com.special.gitf.mail.service.daemon.MailRequestFinderDaemon;
+import com.special.gitf.mail.util.CommonUtil;
+
 @Component
 @PropertySource("classpath:bean-config.xml")
 public class BeanConfiguration {
@@ -70,6 +74,12 @@ public class BeanConfiguration {
 
     return sender;
   }
+
+  @Bean(name = CommonUtil.REGISTRATION_CONFIRMATION_BEAN)
+  MailRequestFinderDaemon findRegistrationConfirmationRequest(MailTransactionService service) {
+    return new MailRequestFinderDaemon(service, CommonUtil.ACTIVATE_USER_ACTION);
+  }
+
 
 
 }
