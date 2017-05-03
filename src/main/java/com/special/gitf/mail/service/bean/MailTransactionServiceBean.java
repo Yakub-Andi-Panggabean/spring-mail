@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.special.gitf.mail.domain.MailAction;
 import com.special.gitf.mail.domain.MailTransaction;
 import com.special.gitf.mail.domain.PasswordReminder;
 import com.special.gitf.mail.domain.User;
@@ -20,12 +20,9 @@ import com.special.gitf.mail.util.CommonUtil;
 
 @Service
 @Transactional(readOnly = true)
-public class MailServiceBean implements MailTransactionService {
+public class MailTransactionServiceBean implements MailTransactionService {
 
-  private static final Logger logger = LoggerFactory.getLogger(MailServiceBean.class);
-
-  @Autowired
-  private JavaMailSenderImpl sender;
+  private static final Logger logger = LoggerFactory.getLogger(MailTransactionServiceBean.class);
 
   @Autowired
   private MailRepository repository;
@@ -43,19 +40,26 @@ public class MailServiceBean implements MailTransactionService {
 
     for (int i = 0; i < inactiveUsers.size(); i++) {
 
-
-      logger.debug("user already activated : {}",
-          repository.isUserAlreadyActivated(inactiveUsers.get(i).getId()));
+      logger.debug("processing registration confirmation for email : {}", inactiveUsers.get(i));
 
       // generate sequence
       final String sequence = repository.findSequence();
 
-      // insert record with registration confirmation config id into mail transaction
-      repository.insertMailTransaction(new MailTransaction(sequence, inactiveUsers.get(i).getId(),
-          repository.findMailActionByActionCode(CommonUtil.ACTIVATE_USER_ACTION).getId(), false,
-          new Date()));
+      final MailAction action =
+          repository.findMailActionByActionCode(CommonUtil.ACTIVATE_USER_ACTION);
 
-      repository.updateUserStatus(CommonUtil.WAITING_CONFIRMATION, inactiveUsers.get(i).getId());
+      if (action != null) {
+        // insert record with registration confirmation config id into mail transaction
+        repository.insertMailTransaction(new MailTransaction(sequence, inactiveUsers.get(i).getId(),
+            action.getId(), false, new Date()));
+
+        repository.updateUserStatus(CommonUtil.WAITING_CONFIRMATION, inactiveUsers.get(i).getId());
+
+      } else {
+        throw new RuntimeException("no mail action found for registration confirmation");
+      }
+
+
 
     }
 
@@ -82,13 +86,16 @@ public class MailServiceBean implements MailTransactionService {
   @Override
   public void findBookingInvoiceMailRequest() throws Exception {
 
-
-
   }
 
   @Override
   public List<MailTransaction> findUnprocessedMailTransactionRequest() throws Exception {
     return repository.findUnfinishedMailTransactions();
+  }
+
+  @Override
+  public MailAction findActionById(String actionId) throws Exception {
+    return repository.findMailActionByActionID(actionId);
   }
 
 

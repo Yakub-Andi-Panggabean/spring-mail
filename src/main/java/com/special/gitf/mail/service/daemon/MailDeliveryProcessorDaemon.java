@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.special.gitf.mail.domain.MailTransaction;
+import com.special.gitf.mail.service.MailDeliveryService;
 import com.special.gitf.mail.service.MailTransactionService;
 import com.special.gitf.mail.util.CommonUtil;
 
@@ -18,6 +19,9 @@ public class MailDeliveryProcessorDaemon implements Runnable {
 
   @Autowired
   private MailTransactionService service;
+
+  @Autowired
+  private MailDeliveryService deliveryService;
 
   @Override
   public void run() {
@@ -30,9 +34,10 @@ public class MailDeliveryProcessorDaemon implements Runnable {
 
           for (int i = 0; i < list.size(); i++) {
 
-            switch (list.get(i).getActionId()) {
+            switch (service.findActionById(list.get(i).getActionId()).getActionCode()) {
 
               case CommonUtil.ACTIVATE_USER_ACTION:
+                deliveryService.sendRegistrationConfirmationMail(list.get(i));
                 break;
               case CommonUtil.FORGOT_PASSWORD_ACTION:
                 break;

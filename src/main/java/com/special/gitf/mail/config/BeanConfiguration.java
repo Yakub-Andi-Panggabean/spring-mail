@@ -66,8 +66,9 @@ public class BeanConfiguration {
     final Properties props = new Properties();
 
     props.put("mail.transport.protocol", "smtp");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.auth", true);
+    props.put("mail.smtp.starttls.enable", true);
+    props.put("mail.smtp.debug", true);
     // props.put("mail.smtp.ssl.enable", "true");
 
     sender.setJavaMailProperties(props);

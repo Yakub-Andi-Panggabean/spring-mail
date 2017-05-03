@@ -158,6 +158,21 @@ public class MailRepository {
   }
 
 
+  public MailAction findMailActionByActionID(String actionId) throws Exception {
+    final PreparedStatement statement =
+        connection.prepareStatement(env.getProperty(CommonUtil.FIND_MAIL_ACTION_BY_ID_KEY));
+    statement.setString(1, actionId);
+    final ResultSet rs = statement.executeQuery();
+    if (rs.next()) {
+      return new MailAction(rs.getString("id"), rs.getString("action_code"),
+          rs.getString("mail_template"), rs.getDate("created_date"), rs.getString("created_by"),
+          rs.getDate("updated_date"), rs.getString("updated_by"));
+    }
+
+    return null;
+  }
+
+
   public synchronized String findSequence() throws Exception {
     final PreparedStatement statement =
         connection.prepareStatement(env.getProperty(CommonUtil.FIND_SEQUENCE_KEY));
@@ -182,7 +197,31 @@ public class MailRepository {
 
     statement.executeUpdate();
 
+  }
 
+
+  public User findUserById(String userId) throws Exception {
+    final PreparedStatement statement =
+        connection.prepareStatement(env.getProperty(CommonUtil.FIND_USER_BY_USER_ID_KEY));
+
+    statement.setString(1, userId);
+
+    final ResultSet rs = statement.executeQuery();
+
+    if (rs.next()) {
+      return new User(rs.getString("user_id"), rs.getString("user_name"),
+          rs.getString("user_email"));
+    }
+    return null;
+  }
+
+  public void updateMailTransactionStatus(String id) throws Exception {
+    final PreparedStatement statement =
+        connection.prepareStatement(env.getProperty(CommonUtil.UPDATE_MAIL_TRANSACTION_STATUS_KEY));
+    statement.setBoolean(1, true);
+    statement.setString(2, id);
+
+    statement.executeUpdate();
   }
 
 

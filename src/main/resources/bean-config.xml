@@ -16,14 +16,20 @@
 	<entry key="insertEmailAction">
 	<![CDATA[
 		insert into
-		mail_action(id,action_code,template,created_date,created_by,updated_date,updated_by)
+		mail_config(id,action_code,template,created_date,created_by,updated_date,updated_by)
 		values(?,?,?,?,?,?,?)
 		]]>
 	</entry>
 	
 	<entry key="findEmailActionByActionCode">
 	<![CDATA[
-		select * from mail_action where action_code=?
+		select * from mail_config where action_code=?
+		]]>
+	</entry>
+	
+	<entry key="findEmailActionByActioID">
+	<![CDATA[
+		select * from mail_config where id=?
 		]]>
 	</entry>
 
@@ -72,7 +78,16 @@
 		]]>
 	</entry>
 	
+	<entry key="findUserByUserId">
+	<![CDATA[
+		select user_id,user_name,user_email from user_web where user_id=?
+		]]>
+	</entry>
 	
-	
+	<entry key="updateMailTransactionStatus">
+	<![CDATA[
+		update mail_transaction set status=? where id=? 
+		]]>
+	</entry>
 	
 </properties>

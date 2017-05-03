@@ -2,6 +2,7 @@ package com.special.gitf.mail.service;
 
 import java.util.List;
 
+import com.special.gitf.mail.domain.MailAction;
 import com.special.gitf.mail.domain.MailTransaction;
 
 public interface MailTransactionService {
@@ -13,6 +14,8 @@ public interface MailTransactionService {
   void findForgotPasswordConfirmationMailRequest() throws Exception;
 
   void findBookingInvoiceMailRequest() throws Exception;
+
+  MailAction findActionById(String actionId) throws Exception;
 
 
 }
