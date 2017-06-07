@@ -23,9 +23,11 @@ public class MailDeliveryProcessorDaemon implements Runnable {
   @Autowired
   private MailDeliveryService deliveryService;
 
+  private final boolean isRunning = true;
+
   @Override
   public void run() {
-    while (true) {
+    while (isRunning) {
       try {
 
         final List<MailTransaction> list = service.findUnprocessedMailTransactionRequest();
@@ -34,19 +36,32 @@ public class MailDeliveryProcessorDaemon implements Runnable {
 
           for (int i = 0; i < list.size(); i++) {
 
-            switch (service.findActionById(list.get(i).getActionId()).getActionCode()) {
+            final String actionCode =
+                service.findActionById(list.get(i).getActionId()).getActionCode();
 
-              case CommonUtil.ACTIVATE_USER_ACTION:
-                deliveryService.sendRegistrationConfirmationMail(list.get(i));
-                break;
-              case CommonUtil.FORGOT_PASSWORD_ACTION:
-                break;
-              case CommonUtil.SEND_INVOICE_ACTION:
-                break;
-              default:
-                logger.info("unknow email action : {}", list.get(i).getActionId());
+            if (actionCode != null) {
 
+              switch (actionCode) {
+
+                case CommonUtil.ACTIVATE_USER_ACTION:
+                  deliveryService.sendRegistrationConfirmationMail(list.get(i));
+                  break;
+                case CommonUtil.FORGOT_PASSWORD_ACTION:
+                  deliveryService.sendPasswordReminderMail(list.get(i));
+                  break;
+                case CommonUtil.SEND_INVOICE_ACTION:
+                  deliveryService.sendBookingInvoiceMail(list.get(i));
+                  break;
+                default:
+                  logger.info("unknow email action : {}", list.get(i).getActionId());
+
+              }
+
+            } else {
+              throw new RuntimeException("null config");
             }
+
+
 
           }
 
@@ -58,6 +73,7 @@ public class MailDeliveryProcessorDaemon implements Runnable {
 
 
       } catch (final Exception e) {
+        e.printStackTrace();
         logger.error("error occured with message : {}", e.getMessage());
         continue;
       }

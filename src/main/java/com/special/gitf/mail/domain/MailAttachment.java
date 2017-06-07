@@ -1,20 +1,21 @@
 package com.special.gitf.mail.domain;
 
 import java.io.File;
+import java.util.List;
 
 public class MailAttachment extends Email {
 
-  private String attachmentName;
-  private File attachment;
+  private List<String> attachmentNames;
+  private List<File> attachments;
 
   public MailAttachment() {
     super();
   }
 
   public MailAttachment(String content, String destination, String subject, String from,
-      File attachment, String attachmentName) {
-    this.attachment = attachment;
-    this.attachmentName = attachmentName;
+      List<File> attachments, List<String> attachmentNames) {
+    this.attachments = attachments;
+    this.attachmentNames = attachmentNames;
     this.content = content;
     this.destination = destination;
     this.subject = subject;
@@ -22,28 +23,26 @@ public class MailAttachment extends Email {
 
   }
 
-  public File getAttachment() {
-    return attachment;
+  public List<String> getAttachmentNames() {
+    return attachmentNames;
   }
 
-  public void setAttachment(File attachment) {
-    this.attachment = attachment;
+  public void setAttachmentNames(List<String> attachmentNames) {
+    this.attachmentNames = attachmentNames;
   }
 
-
-
-  public String getAttachmentName() {
-    return attachmentName;
+  public List<File> getAttachments() {
+    return attachments;
   }
 
-  public void setAttachmentName(String attachmentName) {
-    this.attachmentName = attachmentName;
+  public void setAttachments(List<File> attachments) {
+    this.attachments = attachments;
   }
 
   @Override
   public String toString() {
-    return "MailAttachment [attachment=" + attachment + ", content=" + content + ", destination="
-        + destination + ", subject=" + subject + ", from=" + from + "]";
+    return "MailAttachment [attachmentNames=" + attachmentNames + ", attachment=" + attachments
+        + "]";
   }
 
 

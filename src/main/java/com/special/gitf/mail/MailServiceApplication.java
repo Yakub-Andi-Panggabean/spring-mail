@@ -17,11 +17,18 @@ public class MailServiceApplication {
     final MailDeliveryProcessorDaemon daemon = context.getBean(MailDeliveryProcessorDaemon.class);
     final MailRequestFinderDaemon registrationConfirmation =
         (MailRequestFinderDaemon) context.getBean(CommonUtil.REGISTRATION_CONFIRMATION_BEAN);
+    final MailRequestFinderDaemon passwordReminder =
+        (MailRequestFinderDaemon) context.getBean(CommonUtil.PASSWORD_REMINDER_BEAN);
+
 
     final Thread thread = new Thread(daemon);
     final Thread registrationConfirmationThread = new Thread(registrationConfirmation);
+    final Thread passwordReminderThread = new Thread(passwordReminder);
+
+
     thread.start();
     registrationConfirmationThread.start();
+    passwordReminderThread.start();
 
 
   }

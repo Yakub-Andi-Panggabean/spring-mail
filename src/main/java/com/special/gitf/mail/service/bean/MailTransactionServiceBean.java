@@ -74,10 +74,22 @@ public class MailTransactionServiceBean implements MailTransactionService {
 
     for (int i = 0; i < passwordReminder.size(); i++) {
 
-      // insert record with registration confirmation config id into mail transaction
-      repository.insertMailTransaction(
-          new MailTransaction(repository.findSequence(), passwordReminder.get(i).getUserId(),
-              CommonUtil.FORGOT_PASSWORD_ACTION, false, new Date()));
+      logger.debug("password reset request list :{}", passwordReminder.toString());
+
+      final MailAction action =
+          repository.findMailActionByActionCode(CommonUtil.FORGOT_PASSWORD_ACTION);
+
+      if (action != null) {
+        // insert record with registration confirmation config id into mail transaction
+
+        repository.insertMailTransaction(new MailTransaction(repository.findSequence(),
+            passwordReminder.get(i).getUserId(), action.getId(), false, new Date()));
+
+
+        repository.updatePasswordReminderStatus(passwordReminder.get(i).getId());
+      } else {
+        throw new RuntimeException("no mail action found for password reminder action");
+      }
 
     }
 

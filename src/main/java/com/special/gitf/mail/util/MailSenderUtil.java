@@ -45,12 +45,28 @@ public class MailSenderUtil {
       MailAttachment mailAttachment) throws Exception {
     try {
       final MimeMessage message = sender.createMimeMessage();
-      final MimeMessageHelper helper = new MimeMessageHelper(message);
+      final MimeMessageHelper helper = new MimeMessageHelper(message, true);
       helper.setFrom(mailAttachment.getFrom());
       helper.setTo(mailAttachment.getDestination());
       helper.setText(mailAttachment.getContent(), true);
       helper.setSubject(mailAttachment.getSubject());
-      helper.addAttachment(mailAttachment.getAttachmentName(), mailAttachment.getAttachment());
+
+      if (mailAttachment.getAttachmentNames().size() == mailAttachment.getAttachments().size()) {
+
+        for (int i = 0; i < mailAttachment.getAttachmentNames().size(); i++) {
+
+          helper.addAttachment(mailAttachment.getAttachmentNames().get(i),
+              mailAttachment.getAttachments().get(i));
+
+        }
+
+      } else {
+
+        throw new RuntimeException("unmatched name and file size exception, array out of bond");
+
+      }
+
+
       sender.send(message);
     } catch (final MailException mailException) {
       throw new RuntimeException(mailException.getMessage());

@@ -24,10 +24,16 @@ public class CommonUtil {
   public static final String FIND_MAIL_ACTION_BY_ID_KEY = "findEmailActionByActioID";
   public static final String FIND_MAIL_ACTION_BY_ACTION_CODE_KEY = "findEmailActionByActionCode";
   public static final String FIND_USER_BY_USER_ID_KEY = "findUserByUserId";
+  public static final String FIND_MAIL_ATTACHMENT_BY_MAIL_TRANS_ID =
+      "findEmailAttachmentByMailTransactionId";
+
   public static final String UPDATE_USER_STATUS_KEY = "updateUserWebStatus";
   public static final String UPDATE_MAIL_TRANSACTION_STATUS_KEY = "updateMailTransactionStatus";
+  public static final String UPDATE_PASSWORD_REMINDER_STATUS_KEY = "updatePasswordReminderStatus";
+
 
 
   public static final String REGISTRATION_CONFIRMATION_BEAN = "registrationConfirmationFinder";
+  public static final String PASSWORD_REMINDER_BEAN = "passwordReminderFinder";
 
 }

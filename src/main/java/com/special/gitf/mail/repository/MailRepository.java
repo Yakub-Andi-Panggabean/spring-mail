@@ -5,7 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,11 +92,12 @@ public class MailRepository {
 
     final PreparedStatement statement =
         connection.prepareStatement(env.getProperty(CommonUtil.FIND_PASSWORD_REMINDER_REQUEST_KEY));
+    statement.setBoolean(1, false);
 
     final ResultSet rs = statement.executeQuery();
     while (rs.next()) {
       passwordReminders.add(new PasswordReminder(rs.getInt(1), rs.getString("user_id"),
-          rs.getBoolean("user_status"), rs.getDate("created_datetime")));
+          rs.getBoolean("reminder_status"), rs.getDate("created_datetime")));
     }
 
     return passwordReminders;
@@ -150,8 +153,8 @@ public class MailRepository {
     final ResultSet rs = statement.executeQuery();
     if (rs.next()) {
       return new MailAction(rs.getString("id"), rs.getString("action_code"),
-          rs.getString("mail_template"), rs.getDate("created_date"), rs.getString("created_by"),
-          rs.getDate("updated_date"), rs.getString("updated_by"));
+          rs.getString("mail_subject"), rs.getString("mail_template"), rs.getDate("created_date"),
+          rs.getString("created_by"), rs.getDate("updated_date"), rs.getString("updated_by"));
     }
 
     return null;
@@ -159,14 +162,16 @@ public class MailRepository {
 
 
   public MailAction findMailActionByActionID(String actionId) throws Exception {
+
     final PreparedStatement statement =
         connection.prepareStatement(env.getProperty(CommonUtil.FIND_MAIL_ACTION_BY_ID_KEY));
     statement.setString(1, actionId);
     final ResultSet rs = statement.executeQuery();
+
     if (rs.next()) {
       return new MailAction(rs.getString("id"), rs.getString("action_code"),
-          rs.getString("mail_template"), rs.getDate("created_date"), rs.getString("created_by"),
-          rs.getDate("updated_date"), rs.getString("updated_by"));
+          rs.getString("mail_subject"), rs.getString("mail_template"), rs.getDate("created_date"),
+          rs.getString("created_by"), rs.getDate("updated_date"), rs.getString("updated_by"));
     }
 
     return null;
@@ -222,6 +227,46 @@ public class MailRepository {
     statement.setString(2, id);
 
     statement.executeUpdate();
+  }
+
+
+  public void updatePasswordReminderStatus(int id) throws Exception {
+    final PreparedStatement statement = connection
+        .prepareStatement(env.getProperty(CommonUtil.UPDATE_PASSWORD_REMINDER_STATUS_KEY));
+    statement.setBoolean(1, true);
+    statement.setInt(2, id);
+
+    statement.executeUpdate();
+  }
+
+
+  public List<Map<String, Object>> findMailAttachmentByTransactionId(String transactionId)
+      throws Exception {
+
+    final List<Map<String, Object>> list = new ArrayList<>();
+
+
+    final PreparedStatement statement = connection
+        .prepareStatement(env.getProperty(CommonUtil.FIND_MAIL_ATTACHMENT_BY_MAIL_TRANS_ID));
+
+    statement.setString(1, transactionId);
+
+    final ResultSet rs = statement.executeQuery();
+
+    while (rs.next()) {
+
+      final Map<String, Object> map = new HashMap<>();
+      map.put("id", rs.getInt("id"));
+      map.put("mail_transaction_id", rs.getString("mail_transaction_id"));
+      map.put("attachment", rs.getString("attachment"));
+      map.put("attachment_name", rs.getString("attachment_name"));
+      map.put("created_date", rs.getDate("created_date"));
+
+      list.add(map);
+    }
+
+    return list;
+
   }
 
 

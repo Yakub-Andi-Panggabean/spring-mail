@@ -6,6 +6,7 @@ public class MailAction {
 
   private String id;
   private String actionCode;
+  private String subject;
   private String template;
   private Date createdDate;
   private String createdBy;
@@ -16,12 +17,13 @@ public class MailAction {
     super();
   }
 
-  public MailAction(String id, String actionCode, String template, Date createdDate,
+  public MailAction(String id, String actionCode, String subject, String template, Date createdDate,
       String createdBy, Date updatedDate, String updatedBy) {
     super();
     this.id = id;
     this.actionCode = actionCode;
     this.template = template;
+    this.subject = subject;
     this.createdDate = createdDate;
     this.createdBy = createdBy;
     this.updatedDate = updatedDate;
@@ -84,11 +86,19 @@ public class MailAction {
     this.updatedBy = updatedBy;
   }
 
+  public String getSubject() {
+    return subject;
+  }
+
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
   @Override
   public String toString() {
-    return "MailAction [id=" + id + ", actionName=" + actionCode + ", template=" + template
-        + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDate="
-        + updatedDate + ", updatedBy=" + updatedBy + "]";
+    return "MailAction [id=" + id + ", actionCode=" + actionCode + ", subject=" + subject
+        + ", template=" + template + ", createdDate=" + createdDate + ", createdBy=" + createdBy
+        + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy + "]";
   }
 
 

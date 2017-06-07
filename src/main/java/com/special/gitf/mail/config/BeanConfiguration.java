@@ -69,7 +69,7 @@ public class BeanConfiguration {
     props.put("mail.smtp.auth", true);
     props.put("mail.smtp.starttls.enable", true);
     props.put("mail.smtp.debug", true);
-    // props.put("mail.smtp.ssl.enable", "true");
+    // props.put("mail.smtp.ssl.enable", true);
 
     sender.setJavaMailProperties(props);
 
@@ -79,6 +79,11 @@ public class BeanConfiguration {
   @Bean(name = CommonUtil.REGISTRATION_CONFIRMATION_BEAN)
   MailRequestFinderDaemon findRegistrationConfirmationRequest(MailTransactionService service) {
     return new MailRequestFinderDaemon(service, CommonUtil.ACTIVATE_USER_ACTION);
+  }
+
+  @Bean(name = CommonUtil.PASSWORD_REMINDER_BEAN)
+  MailRequestFinderDaemon findForgotPasswordRequest(MailTransactionService service) {
+    return new MailRequestFinderDaemon(service, CommonUtil.FORGOT_PASSWORD_ACTION);
   }
 
 
